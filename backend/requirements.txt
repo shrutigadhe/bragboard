@@ -5,9 +5,11 @@ psycopg2-binary
 passlib[argon2]
 argon2-cffi
 python-jose[cryptography]
-pydantic
+pydantic[email]
 httpx
 pytest
 python-dotenv
 gunicorn
 python-multipart
+email-validator
+
