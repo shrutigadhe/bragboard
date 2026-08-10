@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUsers, FaTrash, FaQuoteLeft, FaStar } from 'react-icons/fa';
 import BragModal from '../components/BragModal';
+import { getApiUrl } from '../utils/apiConfig';
 
 const DepartmentFeed = () => {
     const navigate = useNavigate();
@@ -17,13 +18,13 @@ const DepartmentFeed = () => {
             if (!token) { navigate('/login'); return; }
             try {
                 const headers = { 'Authorization': `Bearer ${token}` };
-                const userRes = await fetch('/api/me', { headers });
+                const userRes = await fetch(getApiUrl('/api/me'), { headers });
                 if (userRes.ok) {
                     const userData = await userRes.json();
                     setCurrentUserId(userData.id);
                     setIsAdmin(userData.role === 'admin');
                 }
-                const res = await fetch('/api/brags/department', { headers });
+                const res = await fetch(getApiUrl('/api/brags/department'), { headers });
                 if (res.ok) setBrags(await res.json());
             } catch (err) { console.error(err); } finally { setLoading(false); }
         };

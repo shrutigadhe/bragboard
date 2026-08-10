@@ -5,6 +5,7 @@ import ShoutoutFeed from '../components/ShoutoutFeed';
 import ShoutoutFilters from '../components/ShoutoutFilters';
 import ShoutoutForm from '../components/ShoutoutForm';
 import { useToast } from '../context/ToastContext';
+import { getApiUrl } from '../utils/apiConfig';
 
 const ShoutoutPage = () => {
     const navigate = useNavigate();
@@ -29,14 +30,14 @@ const ShoutoutPage = () => {
         setLoading(true);
         try {
             const headers = { 'Authorization': `Bearer ${token}` };
-            const userRes = await fetch('/api/me', { headers });
+            const userRes = await fetch(getApiUrl('/api/me'), { headers });
             if (userRes.ok) {
                 const userData = await userRes.json();
                 setCurrentUserId(userData.id);
                 setIsAdmin(userData.role === 'admin');
             }
 
-            const colRes = await fetch('/api/departments/colleagues', { headers });
+            const colRes = await fetch(getApiUrl('/api/departments/colleagues'), { headers });
             if (colRes.ok) setColleagues(await colRes.json());
 
             const queryParams = new URLSearchParams();

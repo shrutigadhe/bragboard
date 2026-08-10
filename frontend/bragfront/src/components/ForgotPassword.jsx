@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { FaMoon, FaSun, FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -46,7 +47,7 @@ function ForgotPassword() {
         }
 
         try {
-            const response = await fetch('/api/reset-password', {
+            const response = await fetch(getApiUrl('/api/reset-password'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, new_password: newPassword }),

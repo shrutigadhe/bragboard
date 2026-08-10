@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaBuilding, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
         const fetchDepts = async () => {
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch('/api/departments/', {
+                const res = await fetch(getApiUrl('/api/departments/'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) setDepartments(await res.json());
@@ -41,7 +42,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/me', {
+            const res = await fetch(getApiUrl('/api/me'), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

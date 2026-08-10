@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaFilter, FaSortAmountDown, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 const ShoutoutFilters = ({ filters, onFilterChange, sortOrder, onSortChange }) => {
     const [departments, setDepartments] = useState([]);
@@ -12,11 +13,11 @@ const ShoutoutFilters = ({ filters, onFilterChange, sortOrder, onSortChange }) =
             const headers = { 'Authorization': `Bearer ${token}` };
 
             try {
-                const deptRes = await fetch('/api/departments', { headers });
+                const deptRes = await fetch(getApiUrl('/api/departments'), { headers });
                 if (deptRes.ok) setDepartments(await deptRes.json());
 
                 // Fetch all users for global filtering
-                const usersRes = await fetch('/api/users', { headers });
+                const usersRes = await fetch(getApiUrl('/api/users'), { headers });
                 if (usersRes.ok) setUsers(await usersRes.json());
             } catch (err) {
                 console.error("Failed to fetch filter options", err);

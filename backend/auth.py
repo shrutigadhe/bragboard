@@ -1,3 +1,4 @@
+import os
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -11,7 +12,7 @@ import models
 # JWT CONFIGURATION
 # These settings control token generation and verification
 # ─────────────────────────────────────────────
-SECRET_KEY = "your_secret_key_here_change_this_checking"  # Secret key used to sign/verify JWTs (should be in env vars in production)
+SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key_here_change_this_checking")  # Read from environment variable (set on Render)
 ALGORITHM = "HS256"                    # Hashing algorithm for JWT signatures
 ACCESS_TOKEN_EXPIRE_MINUTES = 30       # How long a token stays valid (30 minutes)
 

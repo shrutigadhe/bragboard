@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaCrown, FaStar, FaFire } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
@@ -8,7 +9,7 @@ const Leaderboard = () => {
     const fetchLeaderboard = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch('/api/admin/leaderboard', {
+            const res = await fetch(getApiUrl('/api/admin/leaderboard'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

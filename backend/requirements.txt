@@ -10,3 +10,4 @@ httpx
 pytest
 python-dotenv
 gunicorn
+python-multipart

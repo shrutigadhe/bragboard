@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaHome, FaUser, FaUsers, FaBuilding, FaSignOutAlt, FaMoon, FaSun, FaShieldAlt, FaCrown } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 import NotificationCenter from './NotificationCenter';
 import EditProfileModal from './EditProfileModal';
@@ -47,7 +48,7 @@ const Layout = () => {
             const token = localStorage.getItem('token') || sessionStorage.getItem('token');
             if (token) {
                 try {
-                    const res = await fetch('/api/me', {
+                    const res = await fetch(getApiUrl('/api/me'), {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (res.ok) setUser(await res.json());

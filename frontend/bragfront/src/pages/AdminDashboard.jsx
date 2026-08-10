@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaChartLine, FaFlag, FaTrash, FaCheckCircle, FaUserTag, FaAward, FaFileCsv, FaFilePdf } from 'react-icons/fa';
+import { getApiUrl } from '../utils/apiConfig';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
@@ -11,10 +12,10 @@ const AdminDashboard = () => {
         const token = localStorage.getItem('token');
         try {
             const [statsRes, reportsRes] = await Promise.all([
-                fetch('/api/admin/stats', {
+                fetch(getApiUrl('/api/admin/stats'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch('/api/admin/reports', {
+                fetch(getApiUrl('/api/admin/reports'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
             ]);
