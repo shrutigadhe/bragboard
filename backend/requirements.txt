@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+passlib[argon2]
+argon2-cffi
+python-jose[cryptography]
+pydantic
+httpx
+pytest
+python-dotenv
+gunicorn
