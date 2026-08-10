@@ -14,6 +14,15 @@ from routers import auth_router as auth, brags, departments, shoutouts, notifica
 # ─────────────────────────────────────────────
 models.Base.metadata.create_all(bind=engine)
 
+# Seed default departments if empty
+from database import SessionLocal
+with SessionLocal() as db:
+    if db.query(models.Department).count() == 0:
+        default_depts = ["Engineering", "Product", "Design", "Marketing", "Sales", "HR"]
+        for dept in default_depts:
+            db.add(models.Department(name=dept, description=f"{dept} Department"))
+        db.commit()
+
 # Create the main FastAPI app instance
 app = FastAPI()
 
