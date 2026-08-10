@@ -27,7 +27,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",                          # Local development frontend
         "http://127.0.0.1:3000",                          # Alternate local URL
-        "https://bragboard-frontend.onrender.com",        # Production frontend on Render
+        "https://bragboard-frontend-bney.onrender.com",   # Production frontend on Render
     ],
     allow_credentials=True,   # Allow cookies and Authorization headers
     allow_methods=["*"],      # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
