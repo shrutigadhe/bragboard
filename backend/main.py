@@ -82,3 +82,13 @@ def read_root():
 @app.get("/test-db")
 def test_db(db: Session = Depends(get_db)):
     return {"status": "Database is connected"}
+
+# Temporary endpoint to make shruti@example.com an admin
+@app.get("/make-admin")
+def make_admin(db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == "shruti@example.com").first()
+    if user:
+        user.role = "admin"
+        db.commit()
+        return {"message": "Success! shruti@example.com is now an admin."}
+    return {"message": "User not found. Make sure you registered with shruti@example.com first."}
