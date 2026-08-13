@@ -38,6 +38,10 @@ def get_colleagues(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
+    # Admins should see everyone (across all departments) so they can shoutout anyone
+    if current_user.role == models.UserRole.admin:
+        return db.query(models.User).filter(models.User.id != current_user.id).all()
+
     # If user has no department assigned, return an empty list
     if not current_user.department_id:
         return []

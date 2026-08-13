@@ -9,7 +9,7 @@ const AdminDashboard = () => {
     const [error, setError] = useState(null);
 
     const fetchData = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         try {
             const [statsRes, reportsRes] = await Promise.all([
                 fetch(getApiUrl('/api/admin/stats'), {
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
     }, []);
 
     const handleResolveReport = async (reportId) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         try {
             const res = await fetch(getApiUrl(`/api/admin/reports/${reportId}?status=resolved`), {
                 method: 'PATCH',
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
     const handleDeleteContent = async (report) => {
         if (!window.confirm(`Are you sure you want to delete this ${report.target_type}?`)) return;
 
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         let url = '';
         if (report.target_type === 'shoutout') url = `/api/shoutouts/${report.target_id}`;
         else if (report.target_type === 'brag') url = `/api/brags/${report.target_id}`;

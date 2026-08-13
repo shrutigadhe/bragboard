@@ -7,7 +7,7 @@ const Leaderboard = () => {
     const [loading, setLoading] = useState(true);
 
     const fetchLeaderboard = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         try {
             const res = await fetch(getApiUrl('/api/admin/leaderboard'), {
                 headers: { 'Authorization': `Bearer ${token}` }

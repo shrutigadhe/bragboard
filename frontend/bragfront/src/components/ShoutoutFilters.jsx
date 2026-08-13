@@ -9,7 +9,7 @@ const ShoutoutFilters = ({ filters, onFilterChange, sortOrder, onSortChange }) =
 
     useEffect(() => {
         const fetchFilters = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
             const headers = { 'Authorization': `Bearer ${token}` };
 
             try {

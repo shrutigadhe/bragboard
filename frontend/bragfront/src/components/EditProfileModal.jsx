@@ -23,7 +23,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
 
         // Fetch departments
         const fetchDepts = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
             try {
                 const res = await fetch(getApiUrl('/api/departments/'), {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -41,7 +41,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
             const res = await fetch(getApiUrl('/api/me'), {
                 method: 'PUT',
                 headers: {
