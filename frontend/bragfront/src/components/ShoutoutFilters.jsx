@@ -13,7 +13,7 @@ const ShoutoutFilters = ({ filters, onFilterChange, sortOrder, onSortChange }) =
             const headers = { 'Authorization': `Bearer ${token}` };
 
             try {
-                const deptRes = await fetch(getApiUrl('/api/departments'), { headers });
+                const deptRes = await fetch(getApiUrl('/api/departments/'), { headers });
                 if (deptRes.ok) setDepartments(await deptRes.json());
 
                 // Fetch all users for global filtering

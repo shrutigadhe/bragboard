@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     const handleResolveReport = async (reportId) => {
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`/api/admin/reports/${reportId}?status=resolved`, {
+            const res = await fetch(getApiUrl(`/api/admin/reports/${reportId}?status=resolved`), {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

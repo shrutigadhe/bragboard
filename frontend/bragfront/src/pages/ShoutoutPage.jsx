@@ -45,7 +45,7 @@ const ShoutoutPage = () => {
             if (filters.user_id) queryParams.append('user_id', filters.user_id);
             if (filters.date) queryParams.append('date', filters.date);
 
-            const res = await fetch(`/api/shoutouts/?${queryParams.toString()}`, { headers });
+            const res = await fetch(getApiUrl(`/api/shoutouts/?${queryParams.toString()}`), { headers });
             if (res.ok) setShoutouts(await res.json());
 
         } catch (err) { console.error(err); } finally { setLoading(false); }
@@ -58,7 +58,7 @@ const ShoutoutPage = () => {
     const handleDeleteShoutout = async (id) => {
         if (!window.confirm("Delete this shoutout?")) return;
         try {
-            const res = await fetch(`/api/shoutouts/${id}`, {
+            const res = await fetch(getApiUrl(`/api/shoutouts/${id}`), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

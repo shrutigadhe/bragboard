@@ -35,7 +35,7 @@ const DepartmentFeed = () => {
         if (!window.confirm("Are you sure you want to delete this brag?")) return;
         try {
             const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-            const res = await fetch(`/api/brags/${id}`, {
+            const res = await fetch(getApiUrl(`/api/brags/${id}`), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
