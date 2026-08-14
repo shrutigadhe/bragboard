@@ -9,13 +9,6 @@ tools to monitor and manage platform activity.
 
 ---
 
-## 🚀 Live Demo
-
-🔗 **Live Application:**  
-https://bragboard-frontend-bney.onrender.com
-
----
-
 ## ✨ Features
 
 - 🔐 Secure user authentication
