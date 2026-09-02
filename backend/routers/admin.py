@@ -186,7 +186,10 @@ def update_report_status(
 ):
     check_admin(current_user)
 
-    report = db.query(models.Report).filter(models.Report.id == report_id).first()
+    from sqlalchemy.orm import joinedload
+    report = db.query(models.Report).options(
+        joinedload(models.Report.reporter)
+    ).filter(models.Report.id == report_id).first()
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
 
@@ -195,3 +198,26 @@ def update_report_status(
     db.commit()
     db.refresh(report)
     return report
+
+
+# ─────────────────────────────────────────────
+# DELETE /api/admin/reports/{report_id}
+# Deletes a report entry from the database
+# Requires: admin role
+# ─────────────────────────────────────────────
+@router.delete("/reports/{report_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_report_entry(
+    report_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    check_admin(current_user)
+
+    report = db.query(models.Report).filter(models.Report.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+
+    db.delete(report)
+    db.commit()
+    return None
+

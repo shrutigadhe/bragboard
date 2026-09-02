@@ -76,6 +76,22 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleDeleteReportLog = async (reportId) => {
+        if (!window.confirm("Remove this report record from the list?")) return;
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        try {
+            const res = await fetch(getApiUrl(`/api/admin/reports/${reportId}`), {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok || res.status === 204) {
+                setReports(reports.filter(r => r.id !== reportId));
+            }
+        } catch (err) {
+            console.error("Error clearing report record", err);
+        }
+    };
+
     const handleExportCSV = () => {
         if (!reports || reports.length === 0) {
             alert('No reports to export');
@@ -213,23 +229,28 @@ const AdminDashboard = () => {
                                     <td className="py-4 px-4">
                                         <div className="flex items-center gap-2">
                                             {report.status === 'pending' && (
-                                                <>
-                                                    <button
-                                                        onClick={() => handleResolveReport(report.id)}
-                                                        className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg transition-colors"
-                                                        title="Dismiss/Resolve"
-                                                    >
-                                                        <FaCheckCircle />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDeleteContent(report)}
-                                                        className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                                                        title="Delete Content"
-                                                    >
-                                                        <FaTrash />
-                                                    </button>
-                                                </>
+                                                <button
+                                                    onClick={() => handleResolveReport(report.id)}
+                                                    className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg transition-colors"
+                                                    title="Mark as Resolved (Dismiss)"
+                                                >
+                                                    <FaCheckCircle />
+                                                </button>
                                             )}
+                                            <button
+                                                onClick={() => handleDeleteContent(report)}
+                                                className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                title="Delete Target Post"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteReportLog(report.id)}
+                                                className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                                title="Clear Report Record"
+                                            >
+                                                <FaTimes />
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
