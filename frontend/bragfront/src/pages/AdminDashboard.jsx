@@ -53,34 +53,41 @@ const AdminDashboard = () => {
 
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         let url = '';
-        if (report.target_type === 'shoutout') url = `/api/shoutouts/${report.target_id}`;
-        else if (report.target_type === 'brag') url = `/api/brags/${report.target_id}`;
-        else if (report.target_type === 'comment') url = `/api/comments/${report.target_id}`;
+        if (report.target_type === 'shoutout') url = getApiUrl(`/api/shoutouts/${report.target_id}`);
+        else if (report.target_type === 'brag') url = getApiUrl(`/api/brags/${report.target_id}`);
+        else if (report.target_type === 'comment') url = getApiUrl(`/api/comments/${report.target_id}`);
 
         try {
             const res = await fetch(url, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) {
+            if (res.ok || res.status === 204) {
                 // Also mark report as resolved
                 handleResolveReport(report.id);
                 alert('Content deleted successfully');
+            } else {
+                const data = await res.json().catch(() => ({}));
+                alert(`Failed to delete content: ${data.detail || res.statusText}`);
             }
         } catch (err) {
             console.error('Error deleting content', err);
+            alert('Failed to delete content');
         }
     };
 
     const handleExportCSV = () => {
-        if (reports.length === 0) return;
+        if (!reports || reports.length === 0) {
+            alert('No reports to export');
+            return;
+        }
 
         const headers = ["ID", "Target Type", "Reporter", "Reason", "Status", "Created At"];
         const rows = reports.map(r => [
             r.id,
             r.target_type,
-            r.reporter.name,
-            `"${r.reason.replace(/"/g, '""')}"`,
+            `"${(r.reporter?.name || 'Unknown').replace(/"/g, '""')}"`,
+            `"${(r.reason || '').replace(/"/g, '""')}"`,
             r.status,
             new Date(r.created_at).toLocaleString()
         ]);
@@ -196,7 +203,7 @@ const AdminDashboard = () => {
                             {reports.map((report) => (
                                 <tr key={report.id} className="group hover:bg-white/5 transition-colors">
                                     <td className="py-4 px-4 font-bold capitalize">{report.target_type}</td>
-                                    <td className="py-4 px-4">{report.reporter.name}</td>
+                                    <td className="py-4 px-4">{report.reporter?.name || 'Unknown'}</td>
                                     <td className="py-4 px-4 text-sm text-slate-400 max-w-xs truncate">{report.reason}</td>
                                     <td className="py-4 px-4">
                                         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${report.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-green-500/20 text-green-500'}`}>
@@ -204,7 +211,7 @@ const AdminDashboard = () => {
                                         </span>
                                     </td>
                                     <td className="py-4 px-4">
-                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex items-center gap-2">
                                             {report.status === 'pending' && (
                                                 <>
                                                     <button
