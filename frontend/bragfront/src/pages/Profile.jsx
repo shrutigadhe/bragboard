@@ -323,26 +323,6 @@ const Profile = () => {
                     <div className="space-y-8">
                         <div className="flex items-start gap-6">
                             <div className="p-4 bg-white/5 rounded-2xl text-brand-primary border border-white/5">
-                                <FaEnvelope className="text-xl" />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-xs font-black text-slate-900 dark:text-white/90 uppercase tracking-widest mb-1">Email Address</p>
-                                {isEditing ? (
-                                    <input
-                                        type="email"
-                                        value={editForm.email}
-                                        onChange={e => setEditForm({ ...editForm, email: e.target.value })}
-                                        className="w-full bg-white/10 dark:bg-white/5 border border-brand-primary/40 rounded-xl px-4 py-2 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-brand-primary transition-all"
-                                        placeholder="your@email.com"
-                                    />
-                                ) : (
-                                    <p className="text-xl font-black text-slate-900 dark:text-white">{user.email || 'No email provided'}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="flex items-start gap-6">
-                            <div className="p-4 bg-white/5 rounded-2xl text-brand-primary border border-white/5">
                                 <FaBuilding className="text-xl" />
                             </div>
                             <div className="flex-1">
@@ -388,7 +368,17 @@ const Profile = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-xs font-black text-slate-900 dark:text-white/90 uppercase tracking-widest mb-1">Email Address</p>
-                            <p className="text-xl font-black text-slate-900 dark:text-white truncate">{user.email}</p>
+                            {isEditing ? (
+                                <input
+                                    type="email"
+                                    value={editForm.email}
+                                    onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+                                    className="w-full bg-white/10 dark:bg-white/5 border border-brand-primary/50 focus:border-brand-primary rounded-xl px-4 py-2 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-brand-primary transition-all text-lg"
+                                    placeholder="your@email.com"
+                                />
+                            ) : (
+                                <p className="text-xl font-black text-slate-900 dark:text-white truncate">{user.email}</p>
+                            )}
                         </div>
                     </div>
                 </div>
