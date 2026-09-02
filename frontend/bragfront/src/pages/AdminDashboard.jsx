@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaChartLine, FaFlag, FaTrash, FaCheckCircle, FaUserTag, FaAward, FaFileCsv, FaFilePdf } from 'react-icons/fa';
+import { FaChartLine, FaFlag, FaTrash, FaCheckCircle, FaUserTag, FaAward, FaFileCsv, FaFilePdf, FaTimes } from 'react-icons/fa';
 import { getApiUrl } from '../utils/apiConfig';
 
 const AdminDashboard = () => {
