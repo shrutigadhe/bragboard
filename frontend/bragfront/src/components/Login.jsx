@@ -11,13 +11,17 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [rememberMe, setRememberMe] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [theme, setTheme] = useState('light');
     const navigate = useNavigate();
     const { addToast } = useToast();
 
-    // Load theme and saved email from localStorage on mount
+    // Pre-warm backend on mount & load saved theme/email
     useEffect(() => {
+        // Silent pre-warming ping to wake up Render if it's sleeping
+        fetch(getApiUrl('/api/greet')).catch(() => {});
+
         const savedTheme = localStorage.getItem('theme') || 'light';
         setTheme(savedTheme);
         if (savedTheme === 'dark') {
@@ -48,7 +52,10 @@ function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (loading) return;
         setMessage('');
+        setLoading(true);
+
         try {
             const response = await fetch(getApiUrl('/api/login'), {
                 method: 'POST',
@@ -59,7 +66,6 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // setMessage('Signin successful! Redirecting...');
                 addToast('Login successful! Redirecting...', 'success');
                 if (rememberMe) {
                     localStorage.setItem('token', data.access_token);
@@ -68,7 +74,7 @@ function Login() {
                     sessionStorage.setItem('token', data.access_token);
                     localStorage.removeItem('rememberedEmail');
                 }
-                setTimeout(() => navigate('/dashboard'), 1500);
+                navigate('/dashboard');
             } else {
                 setMessage(data.detail || 'Login failed.');
                 addToast(data.detail || 'Login failed.', 'error');
@@ -76,6 +82,8 @@ function Login() {
         } catch (error) {
             setMessage('Network error. Please try again.');
             addToast('Network error. Please try again.', 'error');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -159,10 +167,22 @@ function Login() {
 
                     <button
                         type="submit"
-                        className="w-full py-4 mt-4 bg-brand-dark text-white dark:bg-white dark:text-brand-dark font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-2xl transition-all lumina-glow hover:scale-[1.02] active:scale-95"
+                        disabled={loading}
+                        className={`w-full py-4 mt-4 bg-brand-dark text-white dark:bg-white dark:text-brand-dark font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-2xl transition-all lumina-glow flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'}`}
                     >
-                        Login
+                        {loading && (
+                            <svg className="animate-spin h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        )}
+                        {loading ? 'Signing In...' : 'Login'}
                     </button>
+                    {loading && (
+                        <p className="text-[10px] text-center text-slate-400 dark:text-slate-500 animate-pulse mt-2">
+                            Connecting to server... (waking up backend if inactive)
+                        </p>
+                    )}
                 </form>
 
                 {message && (
