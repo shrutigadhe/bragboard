@@ -84,13 +84,34 @@ def read_root():
 def test_db(db: Session = Depends(get_db)):
     return {"status": "Database is connected"}
 
-# Utility endpoint to promote a user to admin (defaults to shruti@example.com)
+# Utility endpoint to promote a user to admin (defaults to admin@example.com or custom)
 @app.get("/make-admin")
-def make_admin(email: str = "shruti@example.com", db: Session = Depends(get_db)):
+def make_admin(email: str = "admin@example.com", db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == email).first()
     if user:
         user.role = models.UserRole.admin
         db.commit()
         return {"message": f"Success! {email} is now an admin."}
     return {"message": f"User not found. Make sure you registered with {email} first."}
+
+
+# Utility endpoint to change any user's email in the database
+@app.get("/change-email")
+def change_email(
+    old_email: str = "admin@example.com",
+    new_email: str = "shruti@example.com",
+    db: Session = Depends(get_db)
+):
+    user = db.query(models.User).filter(models.User.email == old_email).first()
+    if not user:
+        return {"message": f"User with email '{old_email}' not found."}
+
+    existing = db.query(models.User).filter(models.User.email == new_email).first()
+    if existing:
+        return {"message": f"Email '{new_email}' is already in use by another user."}
+
+    user.email = new_email
+    db.commit()
+    return {"message": f"Success! Updated email from '{old_email}' to '{new_email}'."}
+
 
