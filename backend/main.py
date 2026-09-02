@@ -38,7 +38,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",                          # Alternate local URL
         "https://bragboard-frontend-bney.onrender.com",   # Production frontend on Render
     ],
-    allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",   # Allow all Vercel deployments
+    allow_origin_regex=r"^https://.*\.vercel\.app$",     # Allow ALL Vercel deployments
     allow_credentials=True,   # Allow cookies and Authorization headers
     allow_methods=["*"],      # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],      # Allow all request headers
