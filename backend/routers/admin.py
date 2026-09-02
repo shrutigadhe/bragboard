@@ -166,7 +166,10 @@ def get_reports(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     check_admin(current_user)
-    return db.query(models.Report).order_by(models.Report.created_at.desc()).all()
+    from sqlalchemy.orm import joinedload
+    return db.query(models.Report).options(
+        joinedload(models.Report.reporter)
+    ).order_by(models.Report.created_at.desc()).all()
 
 
 # ─────────────────────────────────────────────

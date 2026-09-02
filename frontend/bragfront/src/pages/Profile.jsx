@@ -283,6 +283,16 @@ const Profile = () => {
                                         placeholder="Identification..."
                                     />
                                 </div>
+                                <div>
+                                    <label className="block text-xs font-black text-slate-900 dark:text-white/90 uppercase tracking-widest mb-2">Email Address</label>
+                                    <input
+                                        type="email"
+                                        value={editForm.email}
+                                        onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+                                        className="w-full text-lg font-bold text-slate-800 dark:text-white bg-transparent border-b border-brand-primary/50 focus:border-brand-primary outline-none pb-2 transition-all placeholder:text-slate-500"
+                                        placeholder="your@email.com"
+                                    />
+                                </div>
                                 <div className="flex gap-4">
                                     <button onClick={handleUpdateProfile} disabled={saveLoading} className="px-8 py-3 bg-white text-brand-dark rounded-xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all lumina-glow">
                                         {saveLoading ? 'Saving...' : 'Save Changes'}

@@ -3,6 +3,7 @@ import { FaTrash, FaTimes, FaEdit, FaSave, FaPlus, FaFlag } from 'react-icons/fa
 import ReactionButtons from './ReactionButtons';
 import CommentSection from './CommentSection';
 import { getApiUrl } from '../utils/apiConfig';
+import { compressImage } from '../utils/imageCompressor';
 
 const BragModal = ({ brag, onClose, currentUserId, isAdmin, onDelete, onUpdate, onReact }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -77,7 +78,8 @@ const BragModal = ({ brag, onClose, currentUserId, isAdmin, onDelete, onUpdate, 
             for (const item of mediaItems) {
                 if (item.type === 'image') {
                     if (item.source === 'upload') {
-                        processedImages.push(await readFileAsBase64(item.data));
+                        const compressed = await compressImage(item.data);
+                        processedImages.push(compressed || await readFileAsBase64(item.data));
                     } else {
                         // existing or url
                         processedImages.push(item.data);

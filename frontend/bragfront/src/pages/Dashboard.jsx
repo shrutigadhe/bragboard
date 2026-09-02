@@ -8,6 +8,7 @@ import ShoutoutCard from '../components/ShoutoutCard';
 import ShoutoutFilters from '../components/ShoutoutFilters';
 import ShoutoutFeed from '../components/ShoutoutFeed';
 import { getApiUrl } from '../utils/apiConfig';
+import { compressImage } from '../utils/imageCompressor';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -262,7 +263,8 @@ const Dashboard = () => {
       for (const item of mediaItems) {
         if (item.type === 'image') {
           if (item.source === 'upload') {
-            processedImages.push(await readFileAsBase64(item.data));
+            const compressed = await compressImage(item.data);
+            processedImages.push(compressed || await readFileAsBase64(item.data));
           } else {
             processedImages.push(item.data);
           }

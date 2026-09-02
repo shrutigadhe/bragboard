@@ -3,6 +3,7 @@ import { FaBullhorn, FaTimes, FaUserPlus } from 'react-icons/fa';
 import { useToast } from '../context/ToastContext';
 
 import { getApiUrl } from '../utils/apiConfig';
+import { compressImage } from '../utils/imageCompressor';
 
 const ShoutoutForm = ({ onShoutoutCreated, colleagues, compact = false }) => {
   const [message, setMessage] = useState('');
@@ -57,7 +58,7 @@ const ShoutoutForm = ({ onShoutoutCreated, colleagues, compact = false }) => {
         });
       };
 
-      const imageData = imageFile ? await readFileAsBase64(imageFile) : null;
+      const imageData = imageFile ? ((await compressImage(imageFile)) || (await readFileAsBase64(imageFile))) : null;
 
       const res = await fetch(getApiUrl('/api/shoutouts/'), {
         method: 'POST',

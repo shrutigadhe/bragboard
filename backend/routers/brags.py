@@ -95,14 +95,20 @@ def create_brag(
             models.User.id != current_user.id  # Exclude the author themselves
         ).all()
 
-        # Parse @mentions from the brag content (e.g., "@John" -> "John")
+        # Parse @mentions from the brag content (e.g., "@John" or "@JohnDoe")
         import re
         mentioned_names = re.findall(r'@(\w+)', new_brag.content)
 
         for col in colleagues:
             message = f"{current_user.name} shared a new brag!"
-            # If this colleague is @mentioned in the content, give them a specific notification
-            if col.name in mentioned_names:
+            # Match against full name OR first name (handles "@John" for "John Doe")
+            col_first_name = col.name.split()[0] if col.name else ""
+            is_mentioned = (
+                col.name in mentioned_names or
+                col_first_name in mentioned_names or
+                any(m.lower() == col_first_name.lower() or m.lower() == col.name.lower() for m in mentioned_names)
+            )
+            if is_mentioned:
                 message = f"{current_user.name} mentioned you in a brag!"
 
             col_notification = models.Notification(
@@ -174,6 +180,30 @@ def get_my_brags(
         b.reactions = get_reaction_summary(b.id, "brag", db, current_user.id)
         b.has_reported = check_has_reported(b.id, "brag", db, current_user.id)
     return res_brags
+
+
+# ─────────────────────────────────────────────
+# GET /api/brags/{brag_id}
+# Fetches a single brag by ID
+# ─────────────────────────────────────────────
+@router.get("/{brag_id}", response_model=schemas.BragResponse)
+def get_brag_by_id(
+    brag_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    brag = db.query(models.Brag).options(
+        joinedload(models.Brag.user)
+    ).filter(models.Brag.id == brag_id).first()
+
+    if not brag:
+        raise HTTPException(status_code=404, detail="Brag not found")
+
+    res_brag = parse_brag_media(brag)
+    res_brag.reactions = get_reaction_summary(res_brag.id, "brag", db, current_user.id)
+    res_brag.has_reported = check_has_reported(res_brag.id, "brag", db, current_user.id)
+    return res_brag
+
 
 
 # ─────────────────────────────────────────────
