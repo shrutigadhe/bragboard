@@ -10,8 +10,8 @@ with engine.begin() as conn:
     # Reset all to employee
     conn.execute(text("UPDATE users SET role = 'employee'"))
     # Set specified admin
-    conn.execute(text("UPDATE users SET role = 'admin' WHERE email = 'shruti@example.com'"))
-    print("User roles updated. shruti@example.com is now the only admin.")
+    conn.execute(text("UPDATE users SET role = 'admin' WHERE email = 'admin@example.com'"))
+    print("User roles updated. admin@example.com is now the only admin.")
 
 # Verification
 with engine.connect() as conn:
