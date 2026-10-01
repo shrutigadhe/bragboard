@@ -45,13 +45,19 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Hash the password before saving (never store plain text passwords)
     hashed_password = auth.Hash.make(user.password)
 
+    # Check if this email is designated as an admin via environment variable
+    import os
+    admin_emails_env = os.getenv("ADMIN_EMAILS", os.getenv("ADMIN_EMAIL", "admin@example.com"))
+    admin_list = [e.strip().lower() for e in admin_emails_env.split(",") if e.strip()]
+    assigned_role = models.UserRole.admin if user.email.lower() in admin_list else user.role
+
     # Create new user record in the database
     new_user = models.User(
         name=user.name,
         email=user.email,
         password=hashed_password,
         department_id=user.department_id,
-        role=user.role
+        role=assigned_role
     )
 
     db.add(new_user)
@@ -70,6 +76,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=schemas.Token)
 def login(request: schemas.UserLogin, db: Session = Depends(get_db)):
     from sqlalchemy import func
+    import os
     print(f"DEBUG: Login attempt for email: {request.email}")
     # Check session
     print(f"DEBUG: DB Session: {db}")
@@ -89,6 +96,13 @@ def login(request: schemas.UserLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Invalid Credentials"
         )
+
+    # Auto-promote user to admin if email matches ADMIN_EMAILS / ADMIN_EMAIL env var
+    admin_emails_env = os.getenv("ADMIN_EMAILS", os.getenv("ADMIN_EMAIL", "admin@example.com"))
+    admin_list = [e.strip().lower() for e in admin_emails_env.split(",") if e.strip()]
+    if user.email.lower() in admin_list and user.role != models.UserRole.admin:
+        user.role = models.UserRole.admin
+        db.commit()
 
     # Create a signed JWT token with the user's email as the subject
     access_token = auth.create_access_token(data={"sub": user.email})

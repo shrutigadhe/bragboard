@@ -20,7 +20,11 @@ if not DATABASE_URL:
     DATABASE_URL = "postgresql://postgres:shruti098@localhost:5432/bragboard"
 
 # Create the SQLAlchemy engine that manages the connection to PostgreSQL
-engine = create_engine(DATABASE_URL)
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL)
+
 
 # SessionLocal is a factory for creating new database sessions
 # autocommit=False: changes must be committed manually

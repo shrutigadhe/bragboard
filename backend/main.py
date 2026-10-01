@@ -16,12 +16,25 @@ models.Base.metadata.create_all(bind=engine)
 
 # Seed default departments if empty
 from database import SessionLocal
+import os
+from sqlalchemy import func
+
 with SessionLocal() as db:
     if db.query(models.Department).count() == 0:
         default_depts = ["Engineering", "Product", "Design", "Marketing", "Sales", "HR"]
         for dept in default_depts:
             db.add(models.Department(name=dept, description=f"{dept} Department"))
         db.commit()
+
+    # Promote configured admin emails on server startup
+    admin_emails_env = os.getenv("ADMIN_EMAILS", os.getenv("ADMIN_EMAIL", "admin@example.com"))
+    if admin_emails_env:
+        admin_list = [e.strip().lower() for e in admin_emails_env.split(",") if e.strip()]
+        for email in admin_list:
+            u = db.query(models.User).filter(func.lower(models.User.email) == email).first()
+            if u and u.role != models.UserRole.admin:
+                u.role = models.UserRole.admin
+                db.commit()
 
 # Create the main FastAPI app instance
 app = FastAPI()
@@ -84,15 +97,16 @@ def read_root():
 def test_db(db: Session = Depends(get_db)):
     return {"status": "Database is connected"}
 
-# Utility endpoint to promote a user to admin (defaults to admin@example.com or custom)
+# Utility endpoint to promote a user to admin (defaults to admin@example.com or custom via query param)
 @app.get("/make-admin")
 def make_admin(email: str = "admin@example.com", db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == email).first()
+    from sqlalchemy import func
+    user = db.query(models.User).filter(func.lower(models.User.email) == email.lower()).first()
     if user:
         user.role = models.UserRole.admin
         db.commit()
-        return {"message": f"Success! {email} is now an admin."}
-    return {"message": f"User not found. Make sure you registered with {email} first."}
+        return {"message": f"Success! {user.email} is now an admin."}
+    return {"message": f"User with email '{email}' not found. Make sure you registered with this email first."}
 
 
 # Utility endpoint to change any user's email in the database

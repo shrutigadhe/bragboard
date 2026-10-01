@@ -65,8 +65,13 @@ function Register() {
     }, []);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: name === 'department_id' ? parseInt(value, 10) : value
+        });
     };
+
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -152,12 +157,13 @@ function Register() {
                                 required
                                 className="w-full px-6 py-4 bg-black/5 dark:bg-white/[0.03] border border-black/5 dark:border-white/5 rounded-2xl text-slate-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all cursor-pointer font-medium"
                             >
-                                <option value="" disabled className="bg-brand-dark">Select Department</option>
+                                <option value="" disabled className="bg-brand-dark text-white">Select Department</option>
                                 {departments.map(dept => (
-                                    <option key={dept.id} value={dept.id} className="bg-brand-dark">
+                                    <option key={dept.id} value={dept.id} className="bg-brand-dark text-white">
                                         {dept.name}
                                     </option>
                                 ))}
+
                             </select>
                             <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
                                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>

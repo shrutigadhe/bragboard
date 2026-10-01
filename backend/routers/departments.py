@@ -21,6 +21,7 @@ router = APIRouter(
 # Public endpoint — no authentication required
 # Used to populate the department dropdown in the registration form
 # ─────────────────────────────────────────────
+@router.get("", response_model=List[schemas.DepartmentResponse])
 @router.get("/", response_model=List[schemas.DepartmentResponse])
 def get_departments(db: Session = Depends(get_db)):
     departments = db.query(models.Department).all()
