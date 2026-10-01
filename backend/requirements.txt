@@ -2,6 +2,7 @@ fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
+psycopg[binary]
 passlib[argon2]
 argon2-cffi
 python-jose[cryptography]

@@ -10,10 +10,13 @@ load_dotenv()
 # Read the database connection string from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Render/Heroku sometimes provides "postgres://" URLs, but SQLAlchemy needs "postgresql://"
-# This fixes that incompatibility automatically
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+# Render/Heroku sometimes provides "postgres://" or "postgresql://" URLs
+# Standardize to explicit "postgresql+psycopg2://" so SQLAlchemy uses installed psycopg2 driver
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 
 # If no DATABASE_URL is set in the environment, fall back to local sqlite database
 if not DATABASE_URL:
