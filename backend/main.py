@@ -7,37 +7,38 @@ import models
 # Import all feature routers
 from routers import auth_router as auth, brags, departments, shoutouts, notifications, reactions, comments, admin
 
-# ─────────────────────────────────────────────
-# DATABASE INITIALIZATION
-# Creates all tables in the database if they don't already exist
-# This runs on every startup — safe to call repeatedly (won't recreate existing tables)
-# ─────────────────────────────────────────────
-models.Base.metadata.create_all(bind=engine)
-
-# Seed default departments if empty
-from database import SessionLocal
-import os
-from sqlalchemy import func
-
-with SessionLocal() as db:
-    if db.query(models.Department).count() == 0:
-        default_depts = ["Engineering", "Product", "Design", "Marketing", "Sales", "HR"]
-        for dept in default_depts:
-            db.add(models.Department(name=dept, description=f"{dept} Department"))
-        db.commit()
-
-    # Promote configured admin emails on server startup
-    admin_emails_env = os.getenv("ADMIN_EMAILS", os.getenv("ADMIN_EMAIL", "admin@example.com"))
-    if admin_emails_env:
-        admin_list = [e.strip().lower() for e in admin_emails_env.split(",") if e.strip()]
-        for email in admin_list:
-            u = db.query(models.User).filter(func.lower(models.User.email) == email).first()
-            if u and u.role != models.UserRole.admin:
-                u.role = models.UserRole.admin
-                db.commit()
-
 # Create the main FastAPI app instance
 app = FastAPI()
+
+# ─────────────────────────────────────────────
+# DATABASE INITIALIZATION ON STARTUP
+# ─────────────────────────────────────────────
+@app.on_event("startup")
+def startup_db_init():
+    from database import SessionLocal
+    import os
+    from sqlalchemy import func
+
+    try:
+        models.Base.metadata.create_all(bind=engine)
+        with SessionLocal() as db:
+            if db.query(models.Department).count() == 0:
+                default_depts = ["Engineering", "Product", "Design", "Marketing", "Sales", "HR"]
+                for dept in default_depts:
+                    db.add(models.Department(name=dept, description=f"{dept} Department"))
+                db.commit()
+
+            # Promote configured admin emails on server startup
+            admin_emails_env = os.getenv("ADMIN_EMAILS", os.getenv("ADMIN_EMAIL", "admin@example.com"))
+            if admin_emails_env:
+                admin_list = [e.strip().lower() for e in admin_emails_env.split(",") if e.strip()]
+                for email in admin_list:
+                    u = db.query(models.User).filter(func.lower(models.User.email) == email).first()
+                    if u and u.role != models.UserRole.admin:
+                        u.role = models.UserRole.admin
+                        db.commit()
+    except Exception as err:
+        print(f"Startup DB init warning: {err}")
 
 # ─────────────────────────────────────────────
 # CORS MIDDLEWARE

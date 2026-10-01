@@ -15,9 +15,9 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# If no DATABASE_URL is set in the environment, fall back to local development database
+# If no DATABASE_URL is set in the environment, fall back to local sqlite database
 if not DATABASE_URL:
-    DATABASE_URL = "postgresql://postgres:shruti098@localhost:5432/bragboard"
+    DATABASE_URL = "sqlite:///./sql_app.db"
 
 # Create the SQLAlchemy engine that manages the connection to PostgreSQL
 if DATABASE_URL.startswith("sqlite"):
