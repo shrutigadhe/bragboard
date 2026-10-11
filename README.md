@@ -1,8 +1,9 @@
 # 🏆 BragBoard – Internal Employee Recognition Platform
 
-[![Live Demo](https://img.shields.io/badge/Vercel-Live%20App-brightgreen?style=for-the-badge&logo=vercel)](https://bragboard-ictwzlgyw-shrutigadhe6-5986s-projects.vercel.app)
-[![Backend Status](https://img.shields.io/badge/Render-Backend%20API-blue?style=for-the-badge&logo=render)](https://bragboard-backend-yj4e.onrender.com/api/greet)
-[![API Docs](https://img.shields.io/badge/FastAPI-Swagger%20Docs-009688?style=for-the-badge&logo=fastapi)](https://bragboard-backend-yj4e.onrender.com/docs)
+[![Live Demo](https://img.shields.io/badge/Vercel-Live%20App-brightgreen?style=for-the-badge&logo=vercel)](https://bragboard-chi.vercel.app)
+[![Backend Status](https://img.shields.io/badge/Render-Backend%20API-blue?style=for-the-badge&logo=render)](https://bragboard-be.onrender.com/docs)
+[![Database](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
+[![API Docs](https://img.shields.io/badge/FastAPI-Swagger%20Docs-009688?style=for-the-badge&logo=fastapi)](https://bragboard-be.onrender.com/docs)
 
 **BragBoard** is a full-stack employee recognition and appreciation platform designed to boost team morale and foster a culture of gratitude. Employees can share department brag posts, send peer-to-peer shout-outs, tag colleagues, leave reactions/comments, and track engagement via dynamic leaderboards.
 
@@ -10,9 +11,9 @@
 
 ## 🌐 Live Deployment Links
 
-- **Frontend App (Vercel):** [https://bragboard-ictwzlgyw-shrutigadhe6-5986s-projects.vercel.app](https://bragboard-ictwzlgyw-shrutigadhe6-5986s-projects.vercel.app)
-- **Backend API (Render):** [https://bragboard-backend-yj4e.onrender.com](https://bragboard-backend-yj4e.onrender.com)
-- **Interactive API Documentation:** [https://bragboard-backend-yj4e.onrender.com/docs](https://bragboard-backend-yj4e.onrender.com/docs)
+- **Frontend App (Vercel):** [https://bragboard-chi.vercel.app](https://bragboard-chi.vercel.app)
+- **Backend API (Render):** [https://bragboard-be.onrender.com](https://bragboard-be.onrender.com)
+- **Interactive API Documentation:** [https://bragboard-be.onrender.com/docs](https://bragboard-be.onrender.com/docs)
 
 ---
 
@@ -20,7 +21,7 @@
 
 ### 👤 User & Profile Management
 - **JWT Authentication:** Secure signup/login with JWT access tokens and persistent session storage.
-- **Profile Customization:** Upload and crop custom profile avatars, edit user display name, email address, and department assignment.
+- **Profile Customization:** Upload and crop custom profile avatars, edit display name, email address, and department assignment.
 
 ### 📢 Brags & Department Feed
 - **Department Brags:** Share achievement posts within your department.
@@ -57,14 +58,14 @@
 
 ### Backend
 - **Framework:** FastAPI (Python 3.10+)
-- **ORM & DB:** SQLAlchemy & PostgreSQL (hosted on Render)
+- **ORM & DB:** SQLAlchemy & PostgreSQL
 - **Authentication:** OAuth2 with Password Hashing (Argon2 / Passlib) and PyJWT
 - **Validation:** Pydantic schemas
 
-### Deployment & CI/CD
+### Deployment & Cloud Infrastructure
 - **Frontend Hosting:** Vercel
-- **Backend Hosting:** Render
-- **Database:** Render PostgreSQL
+- **Backend Hosting:** Render (`bragboard-be`)
+- **Database:** Neon Serverless PostgreSQL (Permanent, AWS Singapore)
 
 ---
 
@@ -87,7 +88,7 @@
                               ▼
  ┌─────────────────────────────────────────────────────────┐
  │                  PostgreSQL Database                    │
- │                   (Hosted on Render)                    │
+ │               (Hosted on Neon Serverless)               │
  └─────────────────────────────────────────────────────────┘
 ```
 
@@ -106,6 +107,7 @@ cd backend
 
 # Create virtual environment
 python -m venv venv
+
 # Activate virtual environment (Windows)
 .\venv\Scripts\activate
 # Activate virtual environment (Mac/Linux)
@@ -115,7 +117,7 @@ python -m venv venv
 pip install -r requirements.txt
 
 # Configure environment variables (.env)
-# DATABASE_URL=postgresql://user:password@localhost:5432/bragboard
+# DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
 # SECRET_KEY=your_secret_key
 
 # Run the development server
