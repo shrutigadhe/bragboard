@@ -5,8 +5,8 @@
 // Falls back to an empty string when running locally (proxy handles the routing via package.json)
 // ─────────────────────────────────────────────
 
-// Base URL for all API calls — set in .env as REACT_APP_API_URL for production
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+// Base URL for all API calls — falls back to production Render backend when deployed
+const API_BASE_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? 'https://bragboard-be.onrender.com' : '');
 
 /**
  * getApiUrl

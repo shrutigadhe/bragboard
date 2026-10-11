@@ -1,6 +1,6 @@
 # 🏆 BragBoard – Internal Employee Recognition Platform
 
-[![Live Demo](https://img.shields.io/badge/Vercel-Live%20App-brightgreen?style=for-the-badge&logo=vercel)](https://bragboard-chi.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Vercel-Live%20App-brightgreen?style=for-the-badge&logo=vercel)](https://bragboard-git-main-shrutigadhe6-5986s-projects.vercel.app)
 [![Backend Status](https://img.shields.io/badge/Render-Backend%20API-blue?style=for-the-badge&logo=render)](https://bragboard-be.onrender.com/docs)
 [![Database](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
 [![API Docs](https://img.shields.io/badge/FastAPI-Swagger%20Docs-009688?style=for-the-badge&logo=fastapi)](https://bragboard-be.onrender.com/docs)
@@ -11,7 +11,7 @@
 
 ## 🌐 Live Deployment Links
 
-- **Frontend App (Vercel):** [https://bragboard-chi.vercel.app](https://bragboard-chi.vercel.app)
+- **Frontend App (Vercel):** [https://bragboard-git-main-shrutigadhe6-5986s-projects.vercel.app](https://bragboard-git-main-shrutigadhe6-5986s-projects.vercel.app)
 - **Backend API (Render):** [https://bragboard-be.onrender.com](https://bragboard-be.onrender.com)
 - **Interactive API Documentation:** [https://bragboard-be.onrender.com/docs](https://bragboard-be.onrender.com/docs)
 

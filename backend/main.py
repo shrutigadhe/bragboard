@@ -51,6 +51,8 @@ app.add_middleware(
         "http://localhost:3000",                          # Local development frontend
         "http://127.0.0.1:3000",                          # Alternate local URL
         "https://bragboard-frontend-bney.onrender.com",   # Production frontend on Render
+        "https://bragboard-chi.vercel.app",
+        "https://bragboard-git-main-shrutigadhe6-5986s-projects.vercel.app",
     ],
     allow_origin_regex=r"^https://.*\.vercel\.app$",     # Allow ALL Vercel deployments
     allow_credentials=True,   # Allow cookies and Authorization headers
